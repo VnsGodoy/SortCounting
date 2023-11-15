@@ -322,7 +322,7 @@ void calcularTempo(Objeto arr[], int n, int escolha) {
 }
 
 // Função para gerar valores aleatórios para as estruturas
-void gerar_aleatorio(Objeto estrutura[], int n) {
+void GeradorDeSeed(Objeto estrutura[], int n) {
 
     int i;
     for (i = 0; i < n; i++) {
@@ -333,7 +333,7 @@ void gerar_aleatorio(Objeto estrutura[], int n) {
 }
 
 // Função para gerar a chave em ordem crescente e valores aleatórios para as estruturas
-void gerar_crescente(Objeto estrutura[], int n) {
+void GeradorDeSeedCrescente(Objeto estrutura[], int n) {
 
     int i;
     for (i = 0; i < n; i++) {
