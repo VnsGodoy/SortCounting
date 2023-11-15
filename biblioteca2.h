@@ -269,3 +269,77 @@ void CountingSort (int  *vet, int n){
 
 }
 
+void imprimirVetor(Objeto arr[], int n) {
+
+    printf("\n");
+
+    for (int i = 0; i < n; i++) {
+
+        printf("%d\t", arr[i].seed);
+    }
+    printf("\n");
+}
+
+void calcularTempo(Objeto arr[], int n, int escolha) {
+
+    clock_t inicio, fim;
+
+    switch (escolha) {
+        case 1:
+            inicio = clock();
+            InsertionSort(arr, n);
+            break;
+
+        case 2:
+            inicio = clock();
+            BubleSort(arr, n);
+            break;
+
+        case 3:
+            inicio = clock();
+            ShellSort(arr, n);
+            break;
+
+        case 4:
+            inicio = clock();
+            MergeSort(arr, n);
+            break;
+
+        case 5:
+            inicio = clock();
+            //QuickSort(arr, n);
+            break;
+
+        case 6:
+            inicio = clock();
+            CountingSort(arr, n);
+            break;
+    }
+
+            fim = clock();
+
+    printf("\t\t-> Tempo de execução: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
+}
+
+// Função para gerar valores aleatórios para as estruturas
+void gerar_aleatorio(Objeto estrutura[], int n) {
+
+    int i;
+    for (i = 0; i < n; i++) {
+
+        estrutura[i].seed = rand() % 100000; // Gera valores aleatórios para a chave (0-99999)
+        estrutura[i].valor = 100.0 + ((double)rand() / RAND_MAX) * 99899.99;
+    }
+}
+
+// Função para gerar a chave em ordem crescente e valores aleatórios para as estruturas
+void gerar_crescente(Objeto estrutura[], int n) {
+
+    int i;
+    for (i = 0; i < n; i++) {
+
+        estrutura[i].seed = i; // Gera a chave em ordem crescente
+        estrutura[i].valor = 100.0 + ((double)rand() / RAND_MAX) * 99899.99; // Gera valores aleatórios para o número real (entre 100 e 99999.99)
+    }
+}
+
