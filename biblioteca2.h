@@ -129,7 +129,105 @@ void Merge (Objeto * vetor, int * c, int i, int m, int f){
     }
 }
 
-void QuickSort (){
+int partSuperior(Objeto *v, int LI, int LS) {
+
+    int aux, pivo, esq = LI, dir = LS;
+    pivo = v[LI].seed;  // Choose the pivot as the value of the lower limit
+
+    while (1) {  // Infinite loop to break when e >= d
+
+        while (esq <= LS && v[esq].seed >= pivo) {
+            esq++;
+        }
+        while (dir >= LI && v[dir].seed < pivo) {
+            dir--;
+        }
+        if (esq < dir) {
+        
+            aux = v[esq].seed;
+            v[esq].seed = v[dir].seed;
+            v[dir].seed = aux;
+
+        } else {
+
+            break;
+        }
+    }
+
+    // Swap the pivot with the element at index d
+            aux = v[LI].seed;
+
+            v[LI].seed = v[dir].seed;
+
+            v[dir].seed = aux;
+
+    return dir;
+}
+
+int partInferior(Objeto *v, int LI, int LS) {
+
+    int aux, pivo, esq = LI, dir = LS;
+
+    pivo = v[LI].seed;  // Escolha do pivô como o valor da chave do limite inferior
+
+    while (esq < dir) {
+
+        while ((v[esq].seed >= pivo) && (esq < LS)) { esq++; } // Condição invertida para elementos menores
+
+        while ((v[dir].seed < pivo) && (dir > LI)) { dir--; }  // Condição invertida para elementos 
+        
+        if (esq < dir) {
+
+            aux = v[esq].seed;
+            v[esq].seed = v[dir].seed;  // Troca dos elementos de posição
+            v[dir].seed = aux;
+        }
+    }
+            aux = v[LI].seed;
+            v[LI].seed = v[dir].seed;  // Troca do pivô com a posição final
+            v[dir].seed = aux;
+    
+            return dir;
+}
+
+int partCentral(Objeto *v, int LI, int LS) {
+
+    int aux, pivo, esq = LI, dir = LS;
+    int centro = LI + (LS - LI) / 2;  // Encontra o índice do meio do subvetor
+
+    pivo = v[centro].seed;  // Escolha do pivô como o valor da chave do meio
+
+    while (esq < dir) {
+
+        while ((v[esq].seed >= pivo) && (esq < LS)) { esq++; } // Condição invertida para elementos menores
+
+        while ((v[dir].seed < pivo) && (dir > LI)) { dir--; }  // Condição invertida para elementos maiores
+
+        if (esq < dir) {
+
+            aux = v[esq].seed;
+            v[esq].seed = v[dir].seed;  // Troca dos elementos de posição
+            v[dir].seed = aux;
+        }
+    }
+            aux = v[centro].seed;
+            v[centro].seed = v[dir].seed;  // Troca do pivô com a posição final
+            v[dir].seed = aux;
+            
+            return dir;
+}
+
+void QuickSort (int * v, int LI, int LS, int (*EscPivo)(Objeto *, int, int)){
+
+    if(LI < LS){
+
+        int p, i;
+
+        p = particao(v, LI, LS);
+        QuickSort(v, LI, p-1, EscPivo);
+        QuickSort(v, p+1, LS, EscPivo);
+
+    }
 
 }
 
