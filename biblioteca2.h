@@ -1,345 +1,133 @@
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-typedef struct{
-
-    int seed;
-    double valor;
-
-}Objeto;
-
-void MovDados ( Objeto * a, Objeto * b){
-
-    Objeto * aux = a;
-    a = b;
-    b = aux;
-    
-}
-
-void InsertionSort (Objeto * vetor, int n){
-
-    int i, j;
-
-    for(i = 1; i < n; i++){
-
-        for(j=i; j>= 1; j--){
-
-            if(vetor[j-1].seed < vetor[j].seed){  // Definição da ordem descresente
-            MovDados(&vetor[j-1], &vetor[j]);
-            }
-        }
-    }
-}
-
-void BubleSort (Objeto * vetor, int n){
-
-    int i, j;
-
-    for(i=0; i< n-1; i++){
-
-        for(j = 1; j < n-1; j++){
-            if(vetor[j].seed > vetor[j-1].seed){  // Definição da ordem descresente
-                MovDados(&vetor[j-1], &vetor[j]);
-
-            }
-        }
-    }
-}
-
-void ShellSort (Objeto * vetor, int n){
-
-    int i, j, h;
-
-    Objeto aux;
-
-        for(h = 1; h < n; h = 3*h + 1){
-            while(h > 0){
-                h = (h-1)/3;
-        
-        for(i = h; i < n; i++){
-            aux = vetor[i];
-                j = i;
-        }
-            }
-            while(vetor[j-h].seed < aux.seed){   // Definição da ordem descresente
-                        vetor[j] = vetor[j-h];
-                            j -= h;
-
-            if(j < h){
-                    break;
-                    }
-                vetor[j] = aux;
-            }
-        }
-
-}
-
-void MergeSort(int * v, int n){
-
-    int * c = malloc(sizeof(int) * n);
-    Sort(v, c, 0, n-1);
-    free(c);
-
-}
-
-void Sort (int  * v, int * c, int i, int f){
-
-    if(i < f){
-
-        int m = (i+f)/2;
-        Sort(v, c, i , m);
-        Sort(v, c, m+1, f);
-            if(v[m] > v[m+1]){
-                Merge(v, c, i, m, f);
-
-            }
-
-    }
-}
-
-void Merge (Objeto * vetor, int * c, int i, int m, int f){
-
-    int z, iv = i, ic = m + 1;
-
-        for(z = i; z <= f; z++){
-            c[z] = vetor[z].seed;
-            z = i;
-
-            while(iv <= m && ic <= f){
-
-                if(c[iv] >= c[ic]){
-                    vetor[z++].seed = c[iv ++];
-                    
-                }
-                else{
-
-                    vetor[z++].seed = c[ic++];
-                }
-            while(iv <= m){
-
-                vetor[z++].seed = c[iv++];
-            }
-
-            while(ic <= f){
-
-                vetor[z++].seed = c[ic ++];
-            }
-         }
-    }
-}
-
-int partSuperior(Objeto *v, int LI, int LS) {
-
-    int aux, pivo, esq = LI, dir = LS;
-    pivo = v[LI].seed;  // Choose the pivot as the value of the lower limit
-
-    while (1) {  // Infinite loop to break when e >= d
-
-        while (esq <= LS && v[esq].seed >= pivo) {
-            esq++;
-        }
-        while (dir >= LI && v[dir].seed < pivo) {
-            dir--;
-        }
-        if (esq < dir) {
-        
-            aux = v[esq].seed;
-            v[esq].seed = v[dir].seed;
-            v[dir].seed = aux;
-
-        } else {
-
-            break;
-        }
-    }
-
-    // Swap the pivot with the element at index d
-            aux = v[LI].seed;
-
-            v[LI].seed = v[dir].seed;
-
-            v[dir].seed = aux;
-
-    return dir;
-}
-
-int partInferior(Objeto *v, int LI, int LS) {
-
-    int aux, pivo, esq = LI, dir = LS;
-
-    pivo = v[LI].seed;  // Escolha do pivô como o valor da chave do limite inferior
-
-    while (esq < dir) {
-
-        while ((v[esq].seed >= pivo) && (esq < LS)) { esq++; } // Condição invertida para elementos menores
-
-        while ((v[dir].seed < pivo) && (dir > LI)) { dir--; }  // Condição invertida para elementos 
-        
-        if (esq < dir) {
-
-            aux = v[esq].seed;
-            v[esq].seed = v[dir].seed;  // Troca dos elementos de posição
-            v[dir].seed = aux;
-        }
-    }
-            aux = v[LI].seed;
-            v[LI].seed = v[dir].seed;  // Troca do pivô com a posição final
-            v[dir].seed = aux;
-    
-            return dir;
-}
-
-int partCentral(Objeto *v, int LI, int LS) {
-
-    int aux, pivo, esq = LI, dir = LS;
-    int centro = LI + (LS - LI) / 2;  // Encontra o índice do meio do subvetor
-
-    pivo = v[centro].seed;  // Escolha do pivô como o valor da chave do meio
-
-    while (esq < dir) {
-
-        while ((v[esq].seed >= pivo) && (esq < LS)) { esq++; } // Condição invertida para elementos menores
-
-        while ((v[dir].seed < pivo) && (dir > LI)) { dir--; }  // Condição invertida para elementos maiores
-
-        if (esq < dir) {
-
-            aux = v[esq].seed;
-            v[esq].seed = v[dir].seed;  // Troca dos elementos de posição
-            v[dir].seed = aux;
-        }
-    }
-            aux = v[centro].seed;
-            v[centro].seed = v[dir].seed;  // Troca do pivô com a posição final
-            v[dir].seed = aux;
-            
-            return dir;
-}
-
-void QuickSort (int * v, int LI, int LS, int (*EscPivo)(Objeto *, int, int)){
-
-    if(LI < LS){
-
-        int p, i;
-
-        p = particao(v, LI, LS);
-        QuickSort(v, LI, p-1, EscPivo);
-        QuickSort(v, p+1, LS, EscPivo);
-
-    }
-
-}
-
-void CountingSort (int  *vet, int n){
-
-    int tam =  vet[0];
-
-    for(int i = 1; i < n; i++){
-
-        if(vet[i] > tam)
-            tam = vet[i];
-    }
-    
-    int count[tam +1];
-    int i;
-
-    for(i = 0; i <= tam; i++){
-
-        count[i] = 0;
-    }
-
-    for(i = 0; i < n; i++){
-
-        count[vet[i]]++;
-    }
-
-    int saida[n];
-    int posicao = n - 1;
-
-    for(i = tam; i <= 0; i--){
-
-        while(count[i] > 0){
-            vet[posicao] = i;
-            posicao--;
-            count[i]--;
-
-        }
-    }
-
-}
-
-void imprimirVetor(Objeto arr[], int n) {
-
-    printf("\n");
-
-    for (int i = 0; i < n; i++) {
-
-        printf("%d\t", arr[i].seed);
-    }
-    printf("\n");
-}
-
-void calcularTempo(Objeto arr[], int n, int escolha) {
-
+#define TAM 10000
+#define SEED 1
+#include "biblioteca2.h"
+#include <locale.h>
+
+//ANOTAÇÃO IMPORTANTE CASO QUEIRA VER SÓ UMA FUNÇÃO COMENTE TIRE O COMETÁRIO DO ''GERADOR E CALCULAR TEMPO'' TAMBEM TIRE O // DO PRINT 
+
+int main()
+{
+    printf("-> Tamanho Escolhido: [%d]", TAM);
+    printf("\n- Seed: [%d]\n\n", SEED);
+    setlocale(LC_ALL,"Portuguese");
+    srand(time(NULL));
     clock_t inicio, fim;
+    Objeto *array = (Objeto*) malloc(TAM * sizeof(Objeto));
 
-    switch (escolha) {
-        case 1:
-            inicio = clock();
-            InsertionSort(arr, n);
-            break;
+    // Insertion Sort
+    // Tipo 1
+    //printf("- Insertion Sort:\n\tTipo 1:\n");
+    //GeradorDeSeed(array,TAM);
+    //calcularTempo(array,TAM,1);
 
-        case 2:
-            inicio = clock();
-            BubleSort(arr, n);
-            break;
+    // Tipo 2
+    //printf("\n\tTipo 2:\n");
+    //GeradorDeSeedCrescente(array,TAM);
+    //calcularTempo(array,TAM,1);
 
-        case 3:
-            inicio = clock();
-            ShellSort(arr, n);
-            break;
+    // Bubble Sort
+    // Tipo 1
+    //printf("\n\n- Bubble Sort:\n\tTipo 1:\n");
+    //GeradorDeSeed(array,TAM);
+    //calcularTempo(array,TAM,2);
 
-        case 4:
-            inicio = clock();
-            MergeSort(arr, n);
-            break;
+    // Tipo 2
+    //printf("\n\tTipo 2:\n");
+    //GeradorDeSeedCrescente(array,TAM);
+    //calcularTempo(array,TAM,2);
 
-        case 5:
-            inicio = clock();
-            //QuickSort(arr, n);
-            break;
+    // Couting Sort
+    // Tipo 1
+    //printf("\n\n- Couting Sort:\n\tTipo 1:\n");
+    //GeradorDeSeed(array,TAM);
+    //calcularTempo(array,TAM,3);
 
-        case 6:
-            inicio = clock();
-            CountingSort(arr, n);
-            break;
+    // Tipo 2
+    //printf("\n\tTipo 2:\n");
+    //GeradorDeSeedCrescente(array,TAM);
+    //calcularTempo(array,TAM,3);
+
+     if (array) {
+    free(array);
+    array = NULL;
     }
+        
+        Objeto *array2 = (Objeto*) malloc(TAM * sizeof(Objeto));
 
+    // Shell Sort
+    // Tipo 1
+    //printf("\n\n- Shell Sort:\n\tTipo 1:\n");
+    //GeradorDeSeed(array2,TAM);
+    //calcularTempo(array2,TAM,4);
+
+    // Tipo 2
+    //printf("\n\tTipo 2:\n");
+    //GeradorDeSeedCrescente(array2,TAM);
+    //calcularTempo(array2,TAM,4);
+
+    // Merge Sort
+    // Tipo 1
+    //printf("\n\n- Merge Sort:\n\tTipo 1:\n");
+    //GeradorDeSeed(array2,TAM);
+    //calcularTempo(array2,TAM,5);
+
+    // Tipo 2
+    //printf("\n\tTipo 2:\n");
+    //GeradorDeSeedCrescente(array2,TAM);
+    //calcularTempo(array2,TAM,5);
+
+    // Quick Sort
+    printf("\n\n- Quick Sort:\n\tTipo 1:\n");
+    // Tipo 1
+            // Ordenação com pivô no limite superior
+            GeradorDeSeed(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partSuperior);
             fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite superior: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
 
-    printf("\t\t-> Tempo de execução: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
-}
+            // Ordenação com pivô no limite inferior
+            GeradorDeSeed(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partInferior);
+            fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite inferior: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
 
-// Função para gerar valores aleatórios para as estruturas
-void GeradorDeSeed(Objeto estrutura[], int n) {
+            // Ordenação com pivô no meio do subvetor
+            GeradorDeSeed(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partCentral);
+            fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite meio: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
 
-    int i;
-    for (i = 0; i < n; i++) {
+    // Tipo 2
+    printf("\n\tTipo 2:\n");
 
-        estrutura[i].seed = rand() % 100000; // Gera valores aleatórios para a chave (0-99999)
-        estrutura[i].valor = 100.0 + ((double)rand() / RAND_MAX) * 99899.99;
+            // Ordenação com pivô no limite superior
+            GeradorDeSeedCrescente(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partSuperior);
+            fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite superior: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
+
+            // Ordenação com pivô no limite inferior
+            GeradorDeSeedCrescente(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partInferior);
+            fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite inferior: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
+
+            // Ordenação com pivô no meio do subvetor
+            GeradorDeSeedCrescente(array2,TAM);
+            inicio = clock();
+            QuickSort(array2, 0, TAM, partCentral);
+            fim = clock();
+            printf("\n\t\t- Tempo de execucao com pivo no limite meio: [%.3fs]!", (double)(fim - inicio) / CLOCKS_PER_SEC);
+
+    if (array2) {
+    free(array2);
+    array2 = NULL;
     }
+    printf("\n\n\n");
+    return 0;
 }
-
-// Função para gerar a chave em ordem crescente e valores aleatórios para as estruturas
-void GeradorDeSeedCrescente(Objeto estrutura[], int n) {
-
-    int i;
-    for (i = 0; i < n; i++) {
-
-        estrutura[i].seed = i; // Gera a chave em ordem crescente
-        estrutura[i].valor = 100.0 + ((double)rand() / RAND_MAX) * 99899.99; // Gera valores aleatórios para o número real (entre 100 e 99999.99)
-    }
-}
-
